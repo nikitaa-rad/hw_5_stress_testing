@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.web
+    ports:
+      - "8080:4567"
+    depends_on:
+      - db
+    command: >
+      bash -c "bundle exec rake db:migrate && ruby app.rb"
+
+  db:
+    image: mariadb:10.6
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: sinatra_app
+      MYSQL_USER: user
+      MYSQL_PASSWORD: userpassword
+    volumes:
+      - db-data:/var/lib/mysql
+
+volumes:
+  db-data:
